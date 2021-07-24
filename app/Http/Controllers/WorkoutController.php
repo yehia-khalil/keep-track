@@ -41,6 +41,7 @@ class WorkoutController extends Controller
         for ($i = 0 ; $i < count($request->repititions) ; $i ++) {
             $workout->exercises()->attach($request->exercises[$i], ['repititions'=>$request->repititions[$i],'sets'=>$request->sets[$i],'rest_period'=>$request->rest_period[$i],'weight'=>$request->weight[$i]]);
         }
+        $workout->muscleGroup()->attach($request->muscle_groups);
         return new WorkoutResource($workout);
     }
 

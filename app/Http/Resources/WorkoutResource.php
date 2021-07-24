@@ -15,11 +15,17 @@ class WorkoutResource extends JsonResource
     public function toArray($request)
     {
         $exercise = array_map(function ($item) {
-            return ['exercise'=>$item,'sets'=>$item->pivot->sets,'repititions'=>$item->pivot->repititions,'rest period'=>$item->pivot->rest_period, 'weight'=>$item->pivot->weight];
+            return ['exercise'=>$item['name'],'sets'=>$item->pivot->sets,'repititions'=>$item->pivot->repititions,'rest period'=>$item->pivot->rest_period, 'weight'=>$item->pivot->weight];
         }, ExerciseResource::collection($this->exercises)->all());
+        
+        $muscleGroup = array_map(function ($item) {
+            return $item['name'];
+        }, $this->muscleGroup->all());
+
         return [
             'date'=>$this->date,
-            'exercises'=> $exercise
+            'exercises'=> $exercise,
+            'muscle groups'=>$muscleGroup
         ];
     }
 }
