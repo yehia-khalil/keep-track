@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreWorkoutRequest;
 use App\Http\Resources\WorkoutResource;
+use App\Models\Exercise;
 use App\Models\Workout;
 use Illuminate\Http\Request;
 
@@ -37,11 +38,14 @@ class WorkoutController extends Controller
      */
     public function store(StoreWorkoutRequest $request)
     {
-        $workout = Workout::create(['date'=>$request->date]);
-        for ($i = 0 ; $i < count($request->repititions) ; $i ++) {
-            $workout->exercises()->attach($request->exercises[$i], ['repititions'=>$request->repititions[$i],'sets'=>$request->sets[$i],'rest_period'=>$request->rest_period[$i],'weight'=>$request->weight[$i]]);
+        $workout = Workout::create(['date' => $request->date]);
+        for ($i = 0; $i < count($request->repititions); $i++) {
+            $workout->exercises()->attach($request->exercises[$i], ['repititions' => $request->repititions[$i], 'sets' => $request->sets[$i], 'rest_period' => $request->rest_period[$i], 'weight' => $request->weight[$i]]);
         }
-        $workout->muscleGroup()->attach($request->muscle_groups);
+
+        for ($i = 0; $i < count($request->repititions); $i++) {
+            $workout->muscleGroup()->syncWithoutDetaching((Exercise::find($request->exercises[$i])->muscle_groups)->pluck('id')->all());
+        }
         return new WorkoutResource($workout);
     }
 
