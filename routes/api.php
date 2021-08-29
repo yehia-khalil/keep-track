@@ -23,6 +23,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('/login', [LoginController::class, 'authenticate']);
+Route::post('/register', [LoginController::class, 'register']);
 Route::middleware('auth:sanctum')->get('/logout', [LoginController::class, 'logout']);
 
 Route::middleware('auth:sanctum')->apiResource('exercises', ExerciseController::class);

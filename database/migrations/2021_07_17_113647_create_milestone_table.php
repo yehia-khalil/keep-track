@@ -16,6 +16,8 @@ class CreateMilestoneTable extends Migration
         Schema::create('milestones', function (Blueprint $table) {
             $table->id();
             $table->date('date');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

@@ -42,12 +42,12 @@ class MilestoneController extends Controller
         // looping over every exercise, i should get the max reps and weight
         //but first i have to create a milestones
         $date = Carbon::now()->toDateString();
-        $milestone = MileStone::create(['date'=>$date]);
+        $milestone = MileStone::create(['date' => $date, 'user_id' => $request->user()->id]);
         foreach ($result as $res) {
             echo $res['exercise_id'];
             $maxWeight =  DB::table('exercises_workouts')->where('exercise_id', $res['exercise_id'])->max('weight');
             $maxReps =  DB::table('exercises_workouts')->where('exercise_id', $res['exercise_id'])->max('repititions');
-            $milestone->exercises()->attach($res['exercise_id'], ['max_reps_per_set'=>$maxReps,'one_rep_max'=>$maxWeight, 'date'=>$date]);
+            $milestone->exercises()->attach($res['exercise_id'], ['max_reps_per_set' => $maxReps, 'one_rep_max' => $maxWeight, 'date' => $date]);
         }
         return 1;
     }
