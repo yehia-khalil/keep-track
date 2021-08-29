@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ExerciseController;
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\MilestoneController;
 use App\Http\Controllers\WorkoutController;
 use Illuminate\Http\Request;
@@ -17,10 +18,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResource('exercises',ExerciseController::class);
-Route::apiResource('workouts',WorkoutController::class);
-Route::apiResource('milestones',MilestoneController::class);
+Route::post('/login', [LoginController::class, 'authenticate']);
+Route::middleware('auth:sanctum')->get('/logout', [LoginController::class, 'logout']);
+
+Route::middleware('auth:sanctum')->apiResource('exercises', ExerciseController::class);
+Route::middleware('auth:sanctum')->apiResource('workouts', WorkoutController::class);
+Route::middleware('auth:sanctum')->apiResource('milestones', MilestoneController::class);
