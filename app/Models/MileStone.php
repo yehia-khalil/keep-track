@@ -10,7 +10,8 @@ class MileStone extends Model
     use HasFactory;
 
     protected $fillable = [
-        'date'
+        'date',
+        'user_id'
     ];
 
     protected $table = 'milestones';
@@ -20,5 +21,10 @@ class MileStone extends Model
     public function exercises()
     {
         return $this->belongsToMany(Exercise::class, 'exercise_milestone', 'milestone_id', 'exercise_id')->withPivot('one_rep_max','max_reps_per_set','date');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

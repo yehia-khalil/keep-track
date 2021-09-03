@@ -9,16 +9,21 @@ class Workout extends Model
 {
     use HasFactory;
 
-    protected $fillable=['date'];
+    protected $fillable = ['date', 'user_id'];
     public $timestamps = false;
 
     public function exercises()
     {
-        return $this->belongsToMany(Exercise::class, 'exercises_workouts', 'workout_id', 'exercise_id')->withPivot(['repititions','sets','rest_period','weight']);
+        return $this->belongsToMany(Exercise::class, 'exercises_workouts', 'workout_id', 'exercise_id')->withPivot(['repititions', 'sets', 'rest_period', 'weight']);
     }
 
     public function muscleGroup()
     {
         return $this->belongsToMany(MuscleGroup::class, 'workout_muscle_group');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

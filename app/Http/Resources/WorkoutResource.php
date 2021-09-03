@@ -25,7 +25,8 @@ class WorkoutResource extends JsonResource
         return [
             'date'=>$this->date,
             'exercises'=> $exercise,
-            'muscle groups'=>$muscleGroup
+            'muscle groups'=>$muscleGroup,
+            'user'=>$this->user,
         ];
     }
 }
