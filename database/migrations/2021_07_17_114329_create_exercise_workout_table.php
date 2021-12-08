@@ -17,10 +17,10 @@ class CreateExerciseWorkoutTable extends Migration
             $table->id();
             $table->unsignedBigInteger('exercise_id');
             $table->unsignedBigInteger('workout_id');
-            $table->unsignedBigInteger('repititions');
+            $table->unsignedBigInteger('repetitions');
             $table->unsignedBigInteger('sets');
             $table->unsignedBigInteger('rest_period');
-            $table->unsignedBigInteger('weight')->nullable(true);   
+            $table->unsignedBigInteger('weight')->nullable(true);
             $table->foreign('workout_id')->references('id')->on('workouts')->onDelete('cascade');
             $table->foreign('exercise_id')->references('id')->on('exercises')->onDelete('cascade');
         });

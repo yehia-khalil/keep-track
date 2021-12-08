@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\MileStone;
+use App\Models\Workout;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -14,9 +15,9 @@ class MilestoneController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        dd($request->user()->workouts->load('exercises'));
     }
 
     /**
@@ -32,21 +33,23 @@ class MilestoneController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
+
+
         $result = DB::table('exercises_workouts')->select('exercise_id')->groupby('exercise_id')->get();
         $result = json_decode($result, true);
         // looping over every exercise, i should get the max reps and weight
         //but first i have to create a milestones
-        $date = Carbon::now()->toDateString();
+        $date      = Carbon::now()->toDateString();
         $milestone = MileStone::create(['date' => $date, 'user_id' => $request->user()->id]);
         foreach ($result as $res) {
             echo $res['exercise_id'];
-            $maxWeight =  DB::table('exercises_workouts')->where('exercise_id', $res['exercise_id'])->max('weight');
-            $maxReps =  DB::table('exercises_workouts')->where('exercise_id', $res['exercise_id'])->max('repititions');
+            $maxWeight = DB::table('exercises_workouts')->where('user_id',)->where('exercise_id', $res['exercise_id'])->max('weight');
+            $maxReps   = DB::table('exercises_workouts')->where('user_id',)->where('exercise_id', $res['exercise_id'])->max('repititions');
             $milestone->exercises()->attach($res['exercise_id'], ['max_reps_per_set' => $maxReps, 'one_rep_max' => $maxWeight, 'date' => $date]);
         }
         return 1;
@@ -55,7 +58,7 @@ class MilestoneController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -66,7 +69,7 @@ class MilestoneController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -77,8 +80,8 @@ class MilestoneController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -89,7 +92,7 @@ class MilestoneController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

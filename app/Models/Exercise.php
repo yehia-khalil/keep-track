@@ -20,7 +20,7 @@ class Exercise extends Model
     }
     public function workouts()
     {
-        return $this->belongsToMany(Workout::class, 'exercise_workout');
+        return $this->belongsToMany(Workout::class, 'exercises_workouts');
     }
     public function milestones()
     {

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreExerciseRequest extends FormRequest
+class StoreMuscleGroupRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,14 @@ class StoreExerciseRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'            => 'required|unique:exercises,name',
-            'muscle_groups'   => 'required',
-            'muscle_groups.*' => 'exists:muscle_groups,id'
+            'name' => 'required|unique:muscle_groups,name'
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'name.unique' => 'This muscle group already exists'
         ];
     }
 }

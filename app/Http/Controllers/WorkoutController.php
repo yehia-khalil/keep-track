@@ -7,6 +7,7 @@ use App\Http\Resources\WorkoutResource;
 use App\Models\Exercise;
 use App\Models\Workout;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class WorkoutController extends Controller
 {
@@ -17,43 +18,43 @@ class WorkoutController extends Controller
      */
     public function index()
     {
-        return WorkoutResource::collection(Workout::all());
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return WorkoutResource::collection(Workout::where('user_id', Auth::user())->get());
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(StoreWorkoutRequest $request)
     {
         $workout = Workout::create(['date' => $request->date, 'user_id' => $request->user()->id]);
 
-        for ($i = 0; $i < count($request->repititions); $i++) {
-            $workout->exercises()->attach($request->exercises[$i], ['repititions' => $request->repititions[$i], 'sets' => $request->sets[$i], 'rest_period' => $request->rest_period[$i], 'weight' => $request->weight[$i]]);
+        // to attach repetitions to each exercise in the workout
+        for ($i = 0; $i < count($request->repetitions); $i++) {
+            $workout->exercises()->attach
+            (
+                $request->exercises[$i],
+                ['repetitions' => $request->repetitions[$i],
+                 'sets'        => $request->sets[$i],
+                 'rest_period' => $request->rest_period[$i],
+                 'weight'      => $request->weight[$i]
+                ]
+            );
         }
 
-        for ($i = 0; $i < count($request->repititions); $i++) {
+        // to attach muscle groups worked with the exercises in this workout
+        for ($i = 0; $i < count($request->repetitions); $i++) {
             $workout->muscleGroup()->syncWithoutDetaching((Exercise::find($request->exercises[$i])->muscle_groups)->pluck('id')->all());
         }
-        return new WorkoutResource($workout);
+        return WorkoutResource::make($workout);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -64,7 +65,7 @@ class WorkoutController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -75,8 +76,8 @@ class WorkoutController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -87,7 +88,7 @@ class WorkoutController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

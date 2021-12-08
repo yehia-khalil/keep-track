@@ -24,8 +24,9 @@ class StoreWorkoutRequest extends FormRequest
     public function rules()
     {
         return [
-            'date'=>'required|date|before:today',
-            'exercises'=>'required|exists:exercises,id'
+            'date'        => 'required|date|before:today',
+            'exercises.*' => 'exists:exercises,id',
+            'exercises'   => 'required'
         ];
     }
 }
