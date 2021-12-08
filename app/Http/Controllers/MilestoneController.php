@@ -20,7 +20,11 @@ class MilestoneController extends Controller
      */
     public function index(Request $request)
     {
-        return MilestoneResource::collection(MileStone::where('user_id', $request->user()->id)->with('exercises')->get());
+        return MilestoneResource::collection(
+            MileStone::where('user_id', $request->user()->id)
+                     ->with('exercises')
+                     ->get()
+        );
     }
 
     /**

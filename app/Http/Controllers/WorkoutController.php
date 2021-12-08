@@ -14,11 +14,15 @@ class WorkoutController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public function index()
+    public function index(Request $request)
     {
-        return WorkoutResource::collection(Workout::where('user_id', Auth::user())->get());
+        return WorkoutResource::collection(
+            Workout::where('user_id', $request->user()->id)
+                   ->with('exercises')
+                   ->get()
+        );
     }
 
     /**
