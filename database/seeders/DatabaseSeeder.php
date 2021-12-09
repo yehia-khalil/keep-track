@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
 
+        $this->call(UserSeeder::class);
 
         DB::table('muscle_groups')->insert(['name' => 'chest']);
         DB::table('muscle_groups')->insert(['name' => 'arms']);
@@ -24,18 +25,18 @@ class DatabaseSeeder extends Seeder
         DB::table('muscle_groups')->insert(['name' => 'abs']);
 
         // \App\Models\User::factory(10)->create();
-        DB::table('exercises')->insert(['name' => 'push ups']);
-        DB::table('exercises')->insert(['name' => 'pull ups']);
-        DB::table('exercises')->insert(['name' => 'chin ups']);
-        DB::table('exercises')->insert(['name' => 'squats']);
-        DB::table('exercises')->insert(['name' => 'curls']);
-        DB::table('exercises')->insert(['name' => 'triceps extensions']);
-        DB::table('exercises')->insert(['name' => 'tricep dips']);
-        DB::table('exercises')->insert(['name' => 'sit ups']);
-        DB::table('exercises')->insert(['name' => 'leg raises']);
-        DB::table('exercises')->insert(['name' => 'deadlifts']);
-        DB::table('exercises')->insert(['name' => 'decline pushups']);
-        DB::table('exercises')->insert(['name' => 'incline pushups']);
+        DB::table('exercises')->insert(['name' => 'push ups', 'url' => 'https://www.youtube.com/watch?v=IODxDxX7oi4']);
+        DB::table('exercises')->insert(['name' => 'pull ups', 'url' => 'https://www.youtube.com/watch?v=eGo4IYlbE5g']);
+        DB::table('exercises')->insert(['name' => 'chin ups', 'url' => 'https://www.youtube.com/watch?v=mRy9m2Q9_1I']);
+        DB::table('exercises')->insert(['name' => 'squats', 'url' => 'https://www.youtube.com/watch?v=U3HlEF_E9fo']);
+        DB::table('exercises')->insert(['name' => 'curls', 'url' => 'https://www.youtube.com/watch?v=Nkl8WnH6tDU']);
+        DB::table('exercises')->insert(['name' => 'triceps extensions', 'url' => 'https://www.youtube.com/watch?v=nRiJVZDpdL0']);
+        DB::table('exercises')->insert(['name' => 'tricep dips', 'url' => 'https://www.youtube.com/watch?v=6kALZikXxLc']);
+        DB::table('exercises')->insert(['name' => 'sit ups', 'url' => 'https://www.youtube.com/watch?v=1fbU_MkV7NE']);
+        DB::table('exercises')->insert(['name' => 'leg raises', 'url' => 'https://www.youtube.com/watch?v=JB2oyawG9KI']);
+        DB::table('exercises')->insert(['name' => 'deadlifts', 'url' => 'https://www.youtube.com/watch?v=ytGaGIn3SjE']);
+        DB::table('exercises')->insert(['name' => 'decline pushups', 'url' => 'https://www.youtube.com/watch?v=SKPab2YC8BE']);
+        DB::table('exercises')->insert(['name' => 'incline pushups', 'url' => 'https://www.youtube.com/watch?v=Me9bHFAxnCs']);
 
         //push ups
         DB::table('exercise_muscle_group')->insert(['exercise_id' => 1, 'muscle_group_id' => 1]);
