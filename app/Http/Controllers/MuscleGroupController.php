@@ -28,8 +28,9 @@ class MuscleGroupController extends Controller
      */
     public function store(StoreMuscleGroupRequest $request)
     {
+        $this->authorize('create', MuscleGroup::class);
         MuscleGroup::create($request->validated());
-        return SuccessResource::make(['message'=>'Created successfully']);
+        return SuccessResource::make(['message' => 'Created successfully']);
     }
 
     /**

@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
             'name'     => 'yehia',
             'email'    => 'yehia.khalil3@gmail.com',
             'password' => '12345678',
-            'isAdmin'  => 1
+            'isAdmin'  => "1"
         ]);
     }
 }

@@ -16,6 +16,7 @@ class ExerciseResource extends JsonResource
     {
         return [
             'name'          => $this->name,
+            'video'         => $this->video,
             'muscle groups' => $this->muscle_groups->pluck('name')
         ];
     }

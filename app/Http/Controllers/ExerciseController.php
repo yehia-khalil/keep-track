@@ -14,9 +14,27 @@ class ExerciseController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return ExerciseResource::collection(Exercise::all());
+        $exercises = Exercise::when($request->name, function ($q) use ($request) {
+            $q->with('muscle_groups')->where(function ($q) use ($request) {
+                foreach ($request->name as $param) {
+                    $q->whereHas('muscle_groups', function ($q) use ($param) {
+                        $q->where('name', $param);
+                    });
+                }
+//            $q->whereHas('muscle_groups', function ($q) {
+//                $q->where('name', 'arms');
+//            })
+//              ->whereHas('muscle_groups', function ($q) {
+//                  $q->where('name', 'chest');
+//              });
+            });
+        })
+                             ->get();
+//        ->toSql();
+//        dd($exercises);
+        return ExerciseResource::collection($exercises);
     }
 
     /**
@@ -27,6 +45,7 @@ class ExerciseController extends Controller
      */
     public function store(StoreExerciseRequest $request)
     {
+        $this->authorize('create', Exercise::class);
         $exercise = Exercise::create(['name' => $request->name]);
         $exercise->muscle_groups()->attach($request->muscle_groups);
         return ExerciseResource::make($exercise);
