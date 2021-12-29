@@ -50,7 +50,7 @@ class WorkoutController extends Controller
 
         // to attach muscle groups worked with the exercises in this workout
         for ($i = 0; $i < count($request->repetitions); $i++) {
-            $workout->muscleGroup()->syncWithoutDetaching((Exercise::find($request->exercises[$i])->muscle_groups)->pluck('id')->all());
+            $workout->muscle_groups()->syncWithoutDetaching((Exercise::find($request->exercises[$i])->muscle_groups)->pluck('id')->all());
         }
         return WorkoutResource::make($workout);
     }

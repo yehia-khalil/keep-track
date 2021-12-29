@@ -1,0 +1,40 @@
+//{
+//    "or": [{
+//        "entity": "campaign",
+//        "values": [{
+//            "value": [1,2],
+//            "operator": "equal"
+//        },{
+//            "value": [1,2],
+//            "operator": "in"
+//        }]
+//    }
+//    ],
+//    "and": [{
+//        "entity": "campaign",
+//        "operator": "equal",
+//        "value": [1,2]
+//    }]
+//}
+{
+    "campaign": {
+        "or": {
+            "values": [{
+                "value": [1,2],
+                "operator": "equal"
+            },{
+                "value": [1,2],
+                "operator": "in"
+            }]
+        },
+        "and": {
+            "values": [{
+                "value": [1,2],
+                "operator": "equal"
+            },{
+                "value": [1,2],
+                "operator": "in"
+            }]
+        }
+    }
+}

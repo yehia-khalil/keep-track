@@ -19,6 +19,15 @@ class Exercise extends Model
         return $this->url;
     }
 
+
+    public function scopeYehia($query,$condition,$closure)
+    {
+        if ($condition)
+            return $closure($query);
+        else
+            return ;
+    }
+
     public function muscle_groups()
     {
         return $this->belongsToMany(MuscleGroup::class, 'exercise_muscle_group');

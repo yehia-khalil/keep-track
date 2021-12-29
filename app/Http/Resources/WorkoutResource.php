@@ -18,14 +18,14 @@ class WorkoutResource extends JsonResource
             return ['exercise' => $item['name'], 'sets' => $item->pivot->sets, 'repetitions' => $item->pivot->repetitions, 'rest period' => $item->pivot->rest_period, 'weight' => $item->pivot->weight];
         }, ExerciseResource::collection($this->exercises)->all());
 
-        $muscleGroup = array_map(function ($item) {
+        $muscleGroups = array_map(function ($item) {
             return $item['name'];
-        }, $this->muscleGroup->all());
+        }, $this->muscle_groups->all());
 
         return [
             'date'          => $this->date,
             'exercises'     => $exercise,
-            'muscle groups' => $muscleGroup,
+            'muscle groups' => $muscleGroups,
             'user'          => $this->user,
         ];
     }

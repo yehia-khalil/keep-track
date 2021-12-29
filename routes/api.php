@@ -29,6 +29,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/logout', [LoginController::class, 'logout']);
 
     Route::apiResource('exercises', ExerciseController::class);
+    Route::post('exercises',[ ExerciseController::class,"queryBuilder"]);
     Route::apiResource('workouts', WorkoutController::class);
     Route::apiResource('milestones', MilestoneController::class);
     Route::apiResource('muscle-groups', MuscleGroupController::class);

@@ -9,12 +9,83 @@ use Illuminate\Http\Request;
 
 class ExerciseController extends Controller
 {
+    public function queryBuilder(Request $request)
+    {
+//        $inValues=[];
+//        $equalValues=[];
+//        array_map(function($element){
+//            foreach ($element->values as $value){
+//                if($value->operator == 'equal'){
+//                    array_push($equalValues,);
+//                }
+//            }
+//        },$request->entities);
+//        dd($request->all());
+//        dd((Exercise::with('muscle_groups')->first())->muscle_groups->getKeyName());
+        if ($request->filter == "and") {
+            $exercises = Exercise::when($request->entities, function ($q) use ($request) {
+                foreach ($request->entities as $entity) {
+                    $q->with($entity['name'])->where(function ($query) use ($request, $entity) {
+                        foreach ($entity['values'] as $value) {
+                            if ($value['operator'] == 'in') {
+                                $name = $entity['name'];
+                                $query->whereHas($name, function ($q) use ($value, $name) {
+                                    $q->whereIn("$name.id", $value['value']);
+                                });
+                            }
+                        }
+                        foreach ($entity['values'] as $value) {
+                            if ($value['operator'] == 'equal') {
+                                $name = $entity['name'];
+                                $query->whereHas($name, function ($q) use ($value, $name) {
+                                    $q->where("$name.id", $value['value']);
+                                });
+                            }
+                        }
+                    });
+                }
+            })
+                                 ->pluck('name');
+//            ->toSql();
+        }else{
+            //or
+            $exercises = Exercise::when($request->entities, function ($q) use ($request) {
+                foreach ($request->entities as $entity) {
+                    $q->with($entity['name'])->where(function ($query) use ($request, $entity) {
+                        foreach ($entity['values'] as $value) {
+                            if ($value['operator'] == 'in') {
+                                $name = $entity['name'];
+                                $query->whereHas($name, function ($q) use ($value, $name) {
+                                    $q->whereIn("$name.id", $value['value']);
+                                });
+                            }
+                        }
+                    })->orWhere(function($query) use ($request,$entity){
+                        foreach ($entity['values'] as $value) {
+                            if ($value['operator'] == 'equal') {
+                                $name = $entity['name'];
+                                $query->whereHas($name, function ($q) use ($value, $name) {
+                                    $q->where("$name.id", $value['value']);
+                                });
+                            }
+                        }
+                    });
+                }
+            })
+                                 ->pluck('name');
+//            ->toSql();
+        }
+        dd($exercises);
+
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public
+    function index(Request $request)
     {
         $exercises = Exercise::when($request->name, function ($q) use ($request) {
             $q->with('muscle_groups')->where(function ($q) use ($request) {
@@ -23,12 +94,6 @@ class ExerciseController extends Controller
                         $q->where('name', $param);
                     });
                 }
-//            $q->whereHas('muscle_groups', function ($q) {
-//                $q->where('name', 'arms');
-//            })
-//              ->whereHas('muscle_groups', function ($q) {
-//                  $q->where('name', 'chest');
-//              });
             });
         })
                              ->get();
@@ -43,9 +108,9 @@ class ExerciseController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreExerciseRequest $request)
+    public
+    function store(StoreExerciseRequest $request)
     {
-        $this->authorize('create', Exercise::class);
         $exercise = Exercise::create(['name' => $request->name]);
         $exercise->muscle_groups()->attach($request->muscle_groups);
         return ExerciseResource::make($exercise);
@@ -57,7 +122,8 @@ class ExerciseController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public
+    function show($id)
     {
         //
     }
@@ -68,7 +134,8 @@ class ExerciseController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public
+    function edit($id)
     {
         //
     }
@@ -80,7 +147,8 @@ class ExerciseController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(StoreExerciseRequest $request, Exercise $exercise)
+    public
+    function update(StoreExerciseRequest $request, Exercise $exercise)
     {
         //
     }
@@ -91,7 +159,8 @@ class ExerciseController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public
+    function destroy($id)
     {
         //
     }
