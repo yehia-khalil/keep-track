@@ -26,14 +26,19 @@ class ExerciseController extends Controller
             $exercises = Exercise::when($request->entities, function ($q) use ($request) {
                 foreach ($request->entities as $entity) {
                     $q->with($entity['name'])->where(function ($query) use ($request, $entity) {
-                        foreach ($entity['values'] as $value) {
-                            if ($value['operator'] == 'in') {
-                                $name = $entity['name'];
-                                $query->whereHas($name, function ($q) use ($value, $name) {
+//                            if ($value['operator'] == 'in') {
+                        $name = $entity['name'];
+                        $query->whereHas($name, function ($q) use ($name, $entity) {
+                            foreach ($entity['values'] as $value) {
+                                if ($value['operator'] == 'in') {
                                     $q->whereIn("$name.id", $value['value']);
-                                });
+                                }
+//                                if ($value['operator'] == 'equal') {
+//                                    $q->where("$name.id", $value['value']);
+//                                }
                             }
-                        }
+                        });
+//                            }
                         foreach ($entity['values'] as $value) {
                             if ($value['operator'] == 'equal') {
                                 $name = $entity['name'];
@@ -45,35 +50,42 @@ class ExerciseController extends Controller
                     });
                 }
             })
-                                 ->pluck('name');
-//            ->toSql();
-        }else{
+//                                 ->pluck('name');
+                                 ->toSql();
+        } else {
             //or
             $exercises = Exercise::when($request->entities, function ($q) use ($request) {
                 foreach ($request->entities as $entity) {
                     $q->with($entity['name'])->where(function ($query) use ($request, $entity) {
-                        foreach ($entity['values'] as $value) {
-                            if ($value['operator'] == 'in') {
-                                $name = $entity['name'];
-                                $query->whereHas($name, function ($q) use ($value, $name) {
-                                    $q->whereIn("$name.id", $value['value']);
-                                });
-                            }
-                        }
-                    })->orWhere(function($query) use ($request,$entity){
-                        foreach ($entity['values'] as $value) {
-                            if ($value['operator'] == 'equal') {
-                                $name = $entity['name'];
-                                $query->whereHas($name, function ($q) use ($value, $name) {
-                                    $q->where("$name.id", $value['value']);
-                                });
-                            }
-                        }
-                    });
+                        $name = $entity['name'];
+                        $query->whereHas($name, function ($q) use ($entity, $name) {
+                            $q->where(function ($q) use ($entity, $name) {
+                                foreach ($entity['values'] as $value) {
+                                    if ($value['operator'] == 'in') {
+                                        $q->orWhereIn("$name.id", $value['value']);
+                                    }
+                                    if ($value['operator'] == 'equal') {
+                                        $q->orWhere("$name.id", $value['value']);
+                                    }
+                                }
+                            });
+                        });
+                    })
+//                                             ->orWhere(function ($query) use ($request, $entity) {
+//                        foreach ($entity['values'] as $value) {
+//                            if ($value['operator'] == 'equal') {
+//                                $name = $entity['name'];
+//                                $query->whereHas($name, function ($q) use ($value, $name) {
+//                                    $q->where("$name.id", $value['value']);
+//                                });
+//                            }
+//                        }
+//                    })
+                    ;
                 }
             })
                                  ->pluck('name');
-//            ->toSql();
+//                                 ->toSql();
         }
         dd($exercises);
 
